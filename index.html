@@ -105,6 +105,8 @@
 <!-- Sound Effects -->
 <audio id="trumpet" src="https://www.soundjay.com/misc/sounds/trumpet-fanfare-01.mp3"></audio>
 <audio id="cheer" src="https://www.soundjay.com/human/sounds/applause-01.mp3"></audio>
+<audio id="bell" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+<audio id="drum" src="https://www.soundjay.com/button/sounds/drum-roll-1.mp3"></audio>
 
 <script>
 const canvas = document.getElementById("canvas");
@@ -137,12 +139,12 @@ function createParticle(x, y){
 // Fireworks
 function createFirework(x,y){
   const colors = ["#ff0000","#00ff00","#0000ff","#ffff00","#ff00ff","#00ffff"];
-  for(let i=0;i<50;i++){
+  for(let i=0;i<70;i++){ // more fireworks
     fireworks.push({
       x:x, y:y,
-      dx:(Math.random()-0.5)*6,
-      dy:(Math.random()-0.5)*6,
-      life:100,
+      dx:(Math.random()-0.5)*8, // faster spread
+      dy:(Math.random()-0.5)*8,
+      life:120,
       color:colors[Math.floor(Math.random()*colors.length)]
     });
   }
@@ -168,7 +170,7 @@ function animate(){
 }
 animate();
 
-// Countdown logic
+// Countdown
 let countdown = 10;
 const countdownEl = document.getElementById("countdown");
 const messageEl = document.getElementById("message");
@@ -178,9 +180,11 @@ const ribbon = document.getElementById("ribbon");
 // Sounds
 const trumpet = document.getElementById("trumpet");
 const cheer = document.getElementById("cheer");
+const bell = document.getElementById("bell");
+const drum = document.getElementById("drum");
 
 // Confetti interval
-const confettiInterval = setInterval(()=>createParticle(Math.random()*canvas.width,-10),100);
+const confettiInterval = setInterval(()=>createParticle(Math.random()*canvas.width,-10),80); // faster confetti
 
 let interval = setInterval(()=>{
   countdown--;
@@ -194,16 +198,18 @@ let interval = setInterval(()=>{
     ribbon.style.background="transparent";
     messageEl.innerHTML="🚀 The Website is Live! Redirecting...";
 
-    // Play sounds
-    trumpet.play();
-    setTimeout(()=>cheer.play(), 500);
+    // Play multiple sounds
+    drum.play();
+    setTimeout(()=>trumpet.play(), 300);
+    setTimeout(()=>bell.play(), 600);
+    setTimeout(()=>cheer.play(), 900);
 
-    // Fireworks
-    for(let i=0;i<7;i++){
-      setTimeout(()=>createFirework(Math.random()*canvas.width,Math.random()*canvas.height/2),i*500);
+    // Fireworks - multiple bursts
+    for(let i=0;i<12;i++){
+      setTimeout(()=>createFirework(Math.random()*canvas.width,Math.random()*canvas.height/2), i*300);
     }
 
-    setTimeout(()=>{window.location.href="https://stmarysjsocnaigaon.github.io/Home/";},4000);
+    setTimeout(()=>{window.location.href="https://stmarysjsocnaigaon.github.io/Home/";},6000);
   }
 },1000);
 </script>
