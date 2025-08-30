@@ -3,103 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>St. Mary’s Jacobite Syrian Church – Launch</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Website Launch - St. Mary’s Jacobite Syrian Church</title>
   <style>
-    body, html {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #f9fafb;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    #inauguration {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
+      height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      font-family: Arial, sans-serif;
+      color: white;
       text-align: center;
-      z-index: 9999;
-      background: white;
     }
-
+    #countdown {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
     .ribbon {
+      position: relative;
       width: 80%;
       height: 10px;
-      background: #dc2626;
-      position: relative;
-      margin: 20px 0;
-      overflow: hidden;
-      border-radius: 5px;
+      background: red;
+      margin: 20px auto;
     }
-
     .scissors {
+      font-size: 2em;
       position: absolute;
-      top: -20px;
-      left: 0;
-      font-size: 2rem;
-      animation: cut 3s linear forwards;
-    }
-
-    @keyframes cut {
-      0%   { left: 0; }
-      100% { left: 95%; }
-    }
-
-    .countdown {
-      font-size: 3rem;
-      font-weight: bold;
-      margin: 10px 0;
-      color: #1f2937;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
     }
   </style>
 </head>
 <body>
-
-  <!-- Launch Screen -->
-  <div id="inauguration">
-    <h1 class="text-2xl md:text-4xl font-bold text-gray-800 mb-6">
-      Welcome to St. Mary’s Jacobite Syrian Church Website
-    </h1>
-    <div id="countdown" class="countdown">3</div>
-    <div id="ribbonCut" class="hidden">
-      <div class="ribbon">
-        <span class="scissors">✂️</span>
-      </div>
-      <p class="text-lg text-gray-600 mt-2">Ribbon Cutting Ceremony</p>
-    </div>
+  <h1>🎉 Welcome to St. Mary’s Jacobite Syrian Church Website 🎉</h1>
+  <div id="countdown">3</div>
+  <div class="ribbon" id="ribbon">
+    <div class="scissors">✂️</div>
   </div>
+  <p id="message"></p>
 
   <script>
-    const countdownEl = document.getElementById("countdown");
-    const ribbonCut = document.getElementById("ribbonCut");
+    let count = 3;
+    const countdown = document.getElementById("countdown");
+    const ribbon = document.getElementById("ribbon");
+    const message = document.getElementById("message");
 
-    let counter = 3;
-    countdownEl.textContent = counter;
+    const timer = setInterval(() => {
+      count--;
+      countdown.textContent = count > 0 ? count : "🎊 CUT! 🎊";
 
-    const interval = setInterval(() => {
-      counter--;
-      if (counter > 0) {
-        countdownEl.textContent = counter;
-      } else {
-        clearInterval(interval);
-        countdownEl.textContent = "Cut!";
+      if (count === 0) {
+        ribbon.style.background = "transparent";
+        message.textContent = "Our Website is Now Live!";
+      }
+
+      if (count < 0) {
+        clearInterval(timer);
+        // redirect after 2 seconds
         setTimeout(() => {
-          countdownEl.classList.add("hidden");
-          ribbonCut.classList.remove("hidden");
-          // After ribbon cut animation ends → redirect
-          setTimeout(() => {
-            window.location.href = "Home/"; 
-          }, 4200);
-        }, 800);
+          window.location.href = "https://stmarysjsocnaigaon.github.io/Home/";
+        }, 2000);
       }
     }, 1000);
   </script>
-
 </body>
 </html>
