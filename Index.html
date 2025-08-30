@@ -52,15 +52,6 @@
       font-weight: bold;
       margin: 10px 0;
     }
-
-    .hide {
-      animation: fadeOut 1s forwards;
-      animation-delay: 3.2s;
-    }
-
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
-    }
   </style>
 </head>
 <body class="bg-gray-100">
@@ -105,8 +96,8 @@
             ribbonCut.classList.remove("hidden");
             // After ribbon cut animation ends
             setTimeout(() => {
-              // Redirect to main homepage
-              window.location.href = "index.html"; 
+              // Redirect to your Home page
+              window.location.href = "Home/index.html"; 
             }, 4200);
           }, 800);
         }
