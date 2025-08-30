@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Website Launch</title>
+  <title>St. Mary’s Jacobite Syrian Church – Launch</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body, html {
       margin: 0;
       padding: 0;
       height: 100%;
+      background: #f9fafb;
+      font-family: 'Segoe UI', sans-serif;
     }
 
     #inauguration {
@@ -17,21 +19,23 @@
       top: 0; left: 0;
       width: 100%;
       height: 100%;
-      background: white;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
+      text-align: center;
       z-index: 9999;
+      background: white;
     }
 
     .ribbon {
       width: 80%;
       height: 10px;
-      background: red;
+      background: #dc2626;
       position: relative;
       margin: 20px 0;
       overflow: hidden;
+      border-radius: 5px;
     }
 
     .scissors {
@@ -51,58 +55,50 @@
       font-size: 3rem;
       font-weight: bold;
       margin: 10px 0;
+      color: #1f2937;
     }
   </style>
 </head>
-<body class="bg-gray-100">
+<body>
 
   <!-- Launch Screen -->
   <div id="inauguration">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Website Launch</h1>
-    <button id="launchBtn" class="px-6 py-3 bg-blue-600 text-white rounded-xl shadow-lg hover:bg-blue-700">
-      Launch 🚀
-    </button>
-    <div id="countdown" class="countdown hidden"></div>
-    <div id="ribbonCut" class="hidden text-center">
+    <h1 class="text-2xl md:text-4xl font-bold text-gray-800 mb-6">
+      Welcome to St. Mary’s Jacobite Syrian Church Website
+    </h1>
+    <div id="countdown" class="countdown">3</div>
+    <div id="ribbonCut" class="hidden">
       <div class="ribbon">
         <span class="scissors">✂️</span>
       </div>
-      <p class="text-lg text-gray-600">Ribbon Cutting Ceremony</p>
+      <p class="text-lg text-gray-600 mt-2">Ribbon Cutting Ceremony</p>
     </div>
   </div>
 
   <script>
-    const launchBtn = document.getElementById("launchBtn");
     const countdownEl = document.getElementById("countdown");
     const ribbonCut = document.getElementById("ribbonCut");
-    const inauguration = document.getElementById("inauguration");
 
-    launchBtn.addEventListener("click", () => {
-      launchBtn.style.display = "none";
-      countdownEl.classList.remove("hidden");
+    let counter = 3;
+    countdownEl.textContent = counter;
 
-      let counter = 3;
-      countdownEl.textContent = counter;
-
-      const interval = setInterval(() => {
-        counter--;
-        if (counter > 0) {
-          countdownEl.textContent = counter;
-        } else {
-          clearInterval(interval);
-          countdownEl.textContent = "Cut!";
+    const interval = setInterval(() => {
+      counter--;
+      if (counter > 0) {
+        countdownEl.textContent = counter;
+      } else {
+        clearInterval(interval);
+        countdownEl.textContent = "Cut!";
+        setTimeout(() => {
+          countdownEl.classList.add("hidden");
+          ribbonCut.classList.remove("hidden");
+          // After ribbon cut animation ends → redirect
           setTimeout(() => {
-            countdownEl.classList.add("hidden");
-            ribbonCut.classList.remove("hidden");
-            // After ribbon cut animation ends
-            setTimeout(() => {
-              // Redirect to your Home page
-              window.location.href = "Home/index.html"; 
-            }, 4200);
-          }, 800);
-        }
-      }, 1000);
-    });
+            window.location.href = "Home/"; 
+          }, 4200);
+        }, 800);
+      }
+    }, 1000);
   </script>
 
 </body>
