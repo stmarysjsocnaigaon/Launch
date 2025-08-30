@@ -1,73 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Website Launch - St. Mary’s Jacobite Syrian Church</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(to right, #6a11cb, #2575fc);
-      font-family: Arial, sans-serif;
-      color: white;
-      text-align: center;
-    }
-    #countdown {
-      font-size: 3em;
-      margin-bottom: 20px;
-    }
-    .ribbon {
-      position: relative;
-      width: 80%;
-      height: 10px;
-      background: red;
-      margin: 20px auto;
-    }
-    .scissors {
-      font-size: 2em;
-      position: absolute;
-      top: -25px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>St. Mary’s Church Website Launch</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #4f46e5, #facc15);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    margin-bottom: 15px;
+    animation: banner 3s ease-in-out infinite alternate;
+    text-shadow: 0 0 15px gold, 0 0 30px gold;
+  }
+
+  @keyframes banner {
+    0% { transform: translateY(-5px); }
+    100% { transform: translateY(5px); }
+  }
+
+  #countdown {
+    font-size: 4rem;
+    font-weight: bold;
+    margin: 20px 0;
+    animation: pulse 1s infinite;
+    text-shadow: 0 0 10px #fff;
+  }
+
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  .ribbon {
+    width: 80%;
+    max-width: 400px;
+    height: 15px;
+    background: red;
+    position: relative;
+    margin: 30px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+
+  .ribbon::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, gold 0%, transparent 70%);
+    top: 0;
+    left: -100%;
+    animation: glow 2s infinite linear;
+  }
+
+  @keyframes glow {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  .scissors {
+    font-size: 2.5rem;
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: cut 1s forwards;
+    display: none;
+  }
+
+  canvas {
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events: none;
+  }
+</style>
 </head>
 <body>
-  <h1>🎉 Welcome to St. Mary’s Jacobite Syrian Church Website 🎉</h1>
-  <div id="countdown">3</div>
-  <div class="ribbon" id="ribbon">
-    <div class="scissors">✂️</div>
-  </div>
-  <p id="message"></p>
+<h1>🎉 Welcome to St. Mary’s Church Website Launch 🎉</h1>
+<div id="countdown">10</div>
+<div class="ribbon" id="ribbon">
+  <div class="scissors" id="scissors">✂️</div>
+</div>
+<h2 id="message"></h2>
+<canvas id="canvas"></canvas>
 
-  <script>
-    let count = 3;
-    const countdown = document.getElementById("countdown");
-    const ribbon = document.getElementById("ribbon");
-    const message = document.getElementById("message");
+<!-- Sound Effects -->
+<audio id="trumpet" src="https://www.soundjay.com/misc/sounds/trumpet-fanfare-01.mp3"></audio>
+<audio id="cheer" src="https://www.soundjay.com/human/sounds/applause-01.mp3"></audio>
 
-    const timer = setInterval(() => {
-      count--;
-      countdown.textContent = count > 0 ? count : "🎊 CUT! 🎊";
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+let particles = [];
+let fireworks = [];
 
-      if (count === 0) {
-        ribbon.style.background = "transparent";
-        message.textContent = "Our Website is Now Live!";
-      }
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
-      if (count < 0) {
-        clearInterval(timer);
-        // redirect after 2 seconds
-        setTimeout(() => {
-          window.location.href = "https://stmarysjsocnaigaon.github.io/Home/";
-        }, 2000);
-      }
-    }, 1000);
-  </script>
+// Confetti + crosses
+function createParticle(x, y){
+  const colors = ["#fbbf24","#f87171","#22c55e","#3b82f6"];
+  const shapes = ["circle","cross"];
+  const shape = shapes[Math.floor(Math.random()*shapes.length)];
+  particles.push({
+    x:x, y:y,
+    dx:(Math.random()-0.5)*3,
+    dy:(Math.random()*2)+1,
+    life: Math.random()*100+50,
+    color: colors[Math.floor(Math.random()*colors.length)],
+    shape: shape
+  });
+}
+
+// Fireworks
+function createFirework(x,y){
+  const colors = ["#ff0000","#00ff00","#0000ff","#ffff00","#ff00ff","#00ffff"];
+  for(let i=0;i<50;i++){
+    fireworks.push({
+      x:x, y:y,
+      dx:(Math.random()-0.5)*6,
+      dy:(Math.random()-0.5)*6,
+      life:100,
+      color:colors[Math.floor(Math.random()*colors.length)]
+    });
+  }
+}
+
+// Animate
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach((p,i)=>{
+    ctx.fillStyle = p.color;
+    if(p.shape=="circle") ctx.fillRect(p.x,p.y,4,4);
+    else ctx.fillText("✝️",p.x,p.y+4);
+    p.x += p.dx; p.y += p.dy; p.life--;
+    if(p.life<=0) particles.splice(i,1);
+  });
+  fireworks.forEach((f,i)=>{
+    ctx.fillStyle=f.color;
+    ctx.fillRect(f.x,f.y,3,3);
+    f.x+=f.dx; f.y+=f.dy; f.life--;
+    if(f.life<=0) fireworks.splice(i,1);
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+// Countdown logic
+let countdown = 10;
+const countdownEl = document.getElementById("countdown");
+const messageEl = document.getElementById("message");
+const scissors = document.getElementById("scissors");
+const ribbon = document.getElementById("ribbon");
+
+// Sounds
+const trumpet = document.getElementById("trumpet");
+const cheer = document.getElementById("cheer");
+
+// Confetti interval
+const confettiInterval = setInterval(()=>createParticle(Math.random()*canvas.width,-10),100);
+
+let interval = setInterval(()=>{
+  countdown--;
+  countdownEl.textContent = countdown;
+
+  if(countdown===0){
+    clearInterval(interval);
+    clearInterval(confettiInterval);
+    countdownEl.style.display="none";
+    scissors.style.display="block";
+    ribbon.style.background="transparent";
+    messageEl.innerHTML="🚀 The Website is Live! Redirecting...";
+
+    // Play sounds
+    trumpet.play();
+    setTimeout(()=>cheer.play(), 500);
+
+    // Fireworks
+    for(let i=0;i<7;i++){
+      setTimeout(()=>createFirework(Math.random()*canvas.width,Math.random()*canvas.height/2),i*500);
+    }
+
+    setTimeout(()=>{window.location.href="https://stmarysjsocnaigaon.github.io/Home/";},4000);
+  }
+},1000);
+</script>
 </body>
 </html>
