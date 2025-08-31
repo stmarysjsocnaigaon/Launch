@@ -1,160 +1,217 @@
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About Us - St. Mary’s Jacobite Syrian Church Naigaon</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    function toggleMenu() {
-      document.getElementById("mobile-menu").classList.toggle("hidden");
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>St. Mary’s Church Website Launch</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #4f46e5, #facc15);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    margin-bottom: 15px;
+    animation: banner 3s ease-in-out infinite alternate;
+    text-shadow: 0 0 15px gold, 0 0 30px gold;
+  }
+
+  @keyframes banner {
+    0% { transform: translateY(-5px); }
+    100% { transform: translateY(5px); }
+  }
+
+  #countdown {
+    font-size: 4rem;
+    font-weight: bold;
+    margin: 20px 0;
+    animation: pulse 1s infinite;
+    text-shadow: 0 0 10px #fff;
+  }
+
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  .ribbon {
+    width: 80%;
+    max-width: 400px;
+    height: 15px;
+    background: red;
+    position: relative;
+    margin: 30px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+
+  .ribbon::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, gold 0%, transparent 70%);
+    top: 0;
+    left: -100%;
+    animation: glow 2s infinite linear;
+  }
+
+  @keyframes glow {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  .scissors {
+    font-size: 2.5rem;
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: cut 1s forwards;
+    display: none;
+  }
+
+  canvas {
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<h1>🎉 Welcome to St. Mary’s Church Website Launch 🎉</h1>
+<div id="countdown">10</div>
+<div class="ribbon" id="ribbon">
+  <div class="scissors" id="scissors">✂️</div>
+</div>
+<h2 id="message"></h2>
+<canvas id="canvas"></canvas>
+
+<!-- Sound Effects -->
+<audio id="trumpet" src="https://www.soundjay.com/misc/sounds/trumpet-fanfare-01.mp3"></audio>
+<audio id="cheer" src="https://www.soundjay.com/human/sounds/applause-01.mp3"></audio>
+<audio id="bell" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+<audio id="drum" src="https://www.soundjay.com/button/sounds/drum-roll-1.mp3"></audio>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+let particles = [];
+let fireworks = [];
+
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// Confetti + crosses
+function createParticle(x, y){
+  const colors = ["#fbbf24","#f87171","#22c55e","#3b82f6"];
+  const shapes = ["circle","cross"];
+  const shape = shapes[Math.floor(Math.random()*shapes.length)];
+  particles.push({
+    x:x, y:y,
+    dx:(Math.random()-0.5)*3,
+    dy:(Math.random()*2)+1,
+    life: Math.random()*100+50,
+    color: colors[Math.floor(Math.random()*colors.length)],
+    shape: shape
+  });
+}
+
+// Fireworks
+function createFirework(x,y){
+  const colors = ["#ff0000","#00ff00","#0000ff","#ffff00","#ff00ff","#00ffff"];
+  for(let i=0;i<70;i++){ // more fireworks
+    fireworks.push({
+      x:x, y:y,
+      dx:(Math.random()-0.5)*8, // faster spread
+      dy:(Math.random()-0.5)*8,
+      life:120,
+      color:colors[Math.floor(Math.random()*colors.length)]
+    });
+  }
+}
+
+// Animate
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach((p,i)=>{
+    ctx.fillStyle = p.color;
+    if(p.shape=="circle") ctx.fillRect(p.x,p.y,4,4);
+    else ctx.fillText("✝️",p.x,p.y+4);
+    p.x += p.dx; p.y += p.dy; p.life--;
+    if(p.life<=0) particles.splice(i,1);
+  });
+  fireworks.forEach((f,i)=>{
+    ctx.fillStyle=f.color;
+    ctx.fillRect(f.x,f.y,3,3);
+    f.x+=f.dx; f.y+=f.dy; f.life--;
+    if(f.life<=0) fireworks.splice(i,1);
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+// Countdown
+let countdown = 10;
+const countdownEl = document.getElementById("countdown");
+const messageEl = document.getElementById("message");
+const scissors = document.getElementById("scissors");
+const ribbon = document.getElementById("ribbon");
+
+// Sounds
+const trumpet = document.getElementById("trumpet");
+const cheer = document.getElementById("cheer");
+const bell = document.getElementById("bell");
+const drum = document.getElementById("drum");
+
+// Confetti interval
+const confettiInterval = setInterval(()=>createParticle(Math.random()*canvas.width,-10),80); // faster confetti
+
+let interval = setInterval(()=>{
+  countdown--;
+  countdownEl.textContent = countdown;
+
+  if(countdown===0){
+    clearInterval(interval);
+    clearInterval(confettiInterval);
+    countdownEl.style.display="none";
+    scissors.style.display="block";
+    ribbon.style.background="transparent";
+    messageEl.innerHTML="🚀 The Website is Live! Redirecting...";
+
+    // Play multiple sounds
+    drum.play();
+    setTimeout(()=>trumpet.play(), 300);
+    setTimeout(()=>bell.play(), 600);
+    setTimeout(()=>cheer.play(), 900);
+
+    // Fireworks - multiple bursts
+    for(let i=0;i<12;i++){
+      setTimeout(()=>createFirework(Math.random()*canvas.width,Math.random()*canvas.height/2), i*300);
     }
-  </script>
-</head>
-<body class="bg-gray-50 text-gray-800">
 
-  <!-- Navbar -->
-  <nav class="bg-white shadow-md fixed w-full top-0 left-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <div class="flex items-center space-x-3">
-          <a href="index.html" class="flex items-center">
-            <img src="/About-Us/LOGO PNG.png" alt="Church Logo" class="h-12 w-auto">
-            <span class="ml-2 text-lg font-bold text-blue-800">
-              St. Mary’s Jacobite Syrian Orthodox Church
-            </span>
-          </a>
-        </div>
-        <div class="hidden md:flex space-x-8">
-          <a href="https://stmarysjsocnaigaon.github.io/Home/" class="text-gray-700 hover:text-blue-700 font-medium">Home</a>
-          <a href="https://stmarysjsocnaigaon.github.io/About-Us/" class="text-blue-700 font-semibold">About</a>
-          <a href="https://stmarysjsocnaigaon.github.io/Ministries/" class="text-gray-700 hover:text-blue-700 font-medium">Ministries</a>
-          <a href="https://stmarysjsocnaigaon.github.io/Events/" class="text-gray-700 hover:text-blue-700 font-medium">Events</a>
-          <a href="https://stmarysjsocnaigaon.github.io/Gallery/" class="text-gray-700 hover:text-blue-700 font-medium">Gallery</a>
-          <a href="https://stmarysjsocnaigaon.github.io/Contact/" class="text-gray-700 hover:text-blue-700 font-medium">Contact</a>
-        </div>
-        <button class="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100" aria-label="Toggle menu" onclick="toggleMenu()">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-               viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-    <div id="mobile-menu" class="hidden md:hidden bg-white shadow">
-      <a href="https://stmarysjsocnaigaon.github.io/Home/" class="block px-4 py-2 hover:bg-blue-50">Home</a>
-      <a href="https://stmarysjsocnaigaon.github.io/About-Us/" class="block px-4 py-2 hover:bg-blue-50">About</a>
-      <a href="https://stmarysjsocnaigaon.github.io/Ministries/" class="block px-4 py-2 hover:bg-blue-50">Ministries</a>
-      <a href="https://stmarysjsocnaigaon.github.io/Events/" class="block px-4 py-2 hover:bg-blue-50">Events</a>
-      <a href="https://stmarysjsocnaigaon.github.io/Gallery/" class="block px-4 py-2 hover:bg-blue-50">Gallery</a>
-      <a href="https://stmarysjsocnaigaon.github.io/Contact/" class="block px-4 py-2 hover:bg-blue-50">Contact</a>
-    </div>
-  </nav>
-
-  <!-- Hero Section -->
-  <section class="bg-blue-900 text-white text-center py-20 relative mt-16">
-    <img src="/About-Us/church-bg.jpeg" alt="Church Photo" class="absolute inset-0 w-full h-full object-cover opacity-30">
-    <div class="absolute inset-0 bg-black/30"></div>
-    <div class="relative z-10">
-      <h2 class="text-4xl font-bold mb-4">About Our Church</h2>
-      <p class="text-lg max-w-3xl mx-auto">“With the abundant blessings of God Almighty, our parish continues to grow in faith, fellowship, and service.”</p>
-    </div>
-  </section>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Our Church - St. Mary’s Jacobite Syrian Orthodox Church</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 text-gray-800">  <!-- Header -->  <header class="bg-white shadow p-6 text-center">
-    <h1 class="text-3xl font-bold">St. Mary’s Jacobite Syrian Orthodox Church, Naigaon</h1>
-    <p class="mt-2 text-lg italic">“With the abundant blessings of God Almighty, our parish continues to grow in faith, fellowship, and service.”</p>
-  </header>  <!-- Our History -->  <section class="max-w-5xl mx-auto py-12 px-6">
-    <h2 class="text-2xl font-bold mb-6">Our History</h2><!-- Beginnings -->
-<div class="mb-10">
-  <h3 class="text-xl font-semibold mb-2">Beginnings</h3>
-  <p>The roots of St. Mary’s Jacobite Syrian Church, Naigaon – Vasai trace back to St. Thomas Syrian Church, Byculla, Mumbai, founded in 1975. Families began settling in Mira Road, Bhayandar, Naigaon, Vasai, Nallasopara, and Virar, and were initially dependent on Byculla and Malad congregations for Holy Qurbana.</p>
-  <div class="flex gap-4 mt-4">
-    <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">📷 Early Congregation</a>
-    <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">📷 Foundation Stone Blessing</a>
-  </div>
-</div>
-
-<!-- Foundation -->
-<div class="mb-10">
-  <h3 class="text-xl font-semibold mb-2">Foundation</h3>
-  <ul class="list-disc ml-6 space-y-2">
-    <li><b>29 Nov 1987</b> – First Holy Qurbana celebrated by Rev. Fr. Varghese Valayil.</li>
-    <li><b>Dec 1998</b> – Vasai declared independent service center; Rev. Fr. Kuriakose Kadavumbhagam appointed first vicar.</li>
-    <li><b>Land Donation</b> – 65-cent plot at Naigaon East donated by Mr. Antony John Pereira, through Chev. K. V. John.</li>
-  </ul>
-</div>
-
-<!-- Growth -->
-<div class="mb-10">
-  <h3 class="text-xl font-semibold mb-2">Growth of the Parish</h3>
-  <ul class="list-disc ml-6 space-y-2">
-    <li><b>13 Sep 1999</b> – Foundation stone consecrated by H. G. Thomas Mor Themotheos.</li>
-    <li><b>10 Apr 2000</b> – Altar stone blessed by H. H. Moran Mor Ignatius Zakka I, Patriarch of Antioch.</li>
-    <li><b>8–9 Jun 2002</b> – Holy Mooron Consecration of the new church by Metropolitans.</li>
-    <li><b>Sep 2002</b> – Fr. Abraham Padanilathu Memorial Library inaugurated with 5000+ books, thanks to Chev. C. M. Joy.</li>
-  </ul>
-  <a href="#" class="inline-block mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">📷 Church Consecration</a>
-</div>
-
-<!-- Timeline -->
-<div class="mb-10">
-  <h3 class="text-xl font-semibold mb-6">Major Milestones</h3>
-  <ol class="space-y-4 border-l-2 border-blue-600 pl-6">
-    <li><b>29 Nov 1987</b> – First Holy Qurbana (Rev. Fr. Varghese Valayil).</li>
-    <li><b>Dec 1998</b> – Vasai independent; Rev. Kuriakose Kadavumbhagam appointed vicar.</li>
-    <li><b>13 Sep 1999</b> – Foundation stone consecrated.</li>
-    <li><b>10 Apr 2000</b> – Altar stone blessed.</li>
-    <li><b>21 Jan 2001</b> – Service Center at Nallasopara West established.</li>
-    <li><b>8–9 Jun 2002</b> – Holy Mooron Consecration.</li>
-    <li><b>Sep 2002</b> – Memorial Library inaugurated (5000+ books).</li>
-    <li><b>10 Apr 2005</b> – Two members awarded "Chevalier" title.</li>
-    <li><b>4 Sep 2005</b> – Kurishumthotti dedicated to Mother Mary.</li>
-    <li><b>18 Dec 2005</b> – Rededication of Holy Altar.</li>
-    <li><b>15 Jun 2008</b> – Nallasopara center consecrated.</li>
-    <li><b>20 Feb 2011</b> – Parsonage flat purchased and blessed.</li>
-  </ol>
-</div>
-
-<!-- Holy Soonoro -->
-<div class="mb-10">
-  <h3 class="text-xl font-semibold mb-2">Holy Soonoro</h3>
-  <p>Our church is privileged to house the <b>Holy Soonoro of Mother Mary</b>, a sacred relic that blesses the congregation and inspires devotion. Intercessory prayers are conducted every Wednesday, strengthening the faith of the parish community.</p>
-  <a href="#" class="inline-block mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">📷 Holy Soonoro</a>
-</div>
-
-<!-- Present Day -->
-<div class="mb-10">
-  <h3 class="text-xl font-semibold mb-2">Present Day</h3>
-  <p>Today, St. Mary’s Church has over 100 families. Holy Qurbana is held every Sunday at Naigaon and at Nallasopara. The parish also runs:</p>
-  <ul class="list-disc ml-6 space-y-2">
-    <li>Sunday School for children</li>
-    <li>Regular prayer meetings</li>
-    <li>Parish Youth Association & Martha Mariam Vanitha Samajam</li>
-    <li>Our own cemetery – unique among Jacobite Churches in Mumbai</li>
-  </ul>
-  <a href="#" class="inline-block mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">📷 Present Day Church</a>
-</div>
-
-<!-- Vision -->
-<div>
-  <h3 class="text-xl font-semibold mb-2">Vision for the Future</h3>
-  <p>With the grace of God, our parish aims to expand its charitable mission by establishing:</p>
-  <ul class="list-disc ml-6 space-y-2">
-    <li>A charitable hospital</li>
-    <li>A creche</li>
-    <li>A vocational training center for women</li>
-  </ul>
-</div>
-
-  </section>  <!-- Footer -->  <footer class="bg-gray-900 text-white text-center py-6 mt-12">
-    <p>© 2025 St. Mary’s Jacobite Syrian Orthodox Church. All Rights Reserved.</p>
-  </footer></body>
+    setTimeout(()=>{window.location.href="https://stmarysjsocnaigaon.github.io/Home/";},6000);
+  }
+},1000);
+</script>
+</body>
 </html>
